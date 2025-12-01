@@ -1,8 +1,9 @@
 org.brentloaf.displaylib.full
-org.brentloaf.displaylib.full.Objects
-org.brentloaf.displaylib.full.Objects.Display
-org.brentloaf.displaylib.full.Objects.Display.DisplayContext
-org.brentloaf.displaylib.full.Objects.Display.Interactable
-org.brentloaf.displaylib.full.Objects.Display.SyncedSessions
-org.brentloaf.displaylib.full.Objects.Display.SyncedSessions.SlotPair
-org.brentloaf.displaylib.full.Objects.ItemBuilder
+org.brentloaf.displaylib.full.Objects.DisplayCurrents
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.Display
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.Display.DisplayContext
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.Display.Interactable
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.Display.SyncedSessions
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.Display.SyncedSessions.SlotPair
+org.brentloaf.displaylib.full.Objects.DisplayCurrents.CurrentDisplay.ItemBuilder
