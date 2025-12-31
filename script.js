@@ -342,104 +342,187 @@ form.addEventListener('submit', async (ev)=>{
 })(); 
 // carousel: no JS changes required for hover scaling; styling handles the hover scale & vertical alignment
 
-/* Portfolio carousel: continuous autoplaying videos (matches behavior of features & reviews) */
+/* Portfolio carousel: continuous autoplaying videos (matches behavior of features & reviews)
+   Videos are discovered at runtime by scanning the /portfolio/ directory for known video extensions.
+   This keeps the carousel behaviour unchanged while allowing adding/removing files from the folder
+   without editing the code. */
 (function(){
   const track = document.getElementById('portfolioTrack');
   if(!track) return;
 
-  // ensure videos autoplay & play while visible in DOM
-  function playVisibleVideos(){
-    const vids = Array.from(track.querySelectorAll('video'));
-    vids.forEach(v => {
-      // start playing if not already; browsers require muted for autoplay which we set
-      if (v.paused) {
-        v.play().catch(()=>{ /* ignore play errors */ });
-      }
-    });
+  const VIDEO_EXTENSIONS = ['.mp4','.webm','.mov','.ogg','.mkv','.mpg','.mpeg','.avi',' .qt'];
+
+  // create an article.card element with a video child for a given src
+  function createVideoCard(src){
+    const article = document.createElement('article');
+    article.className = 'card';
+    article.setAttribute('role','listitem');
+    const v = document.createElement('video');
+    v.src = src;
+    v.muted = true;
+    v.playsInline = true;
+    v.loop = true;
+    v.preload = 'metadata';
+    v.setAttribute('playsinline','');
+    v.style.background = '#000';
+    article.appendChild(v);
+    return article;
   }
 
-  // Clone items to ensure smooth continuous flow
-  function duplicateChildren(){
-    const children = Array.from(track.children);
-    children.forEach(c => track.appendChild(c.cloneNode(true)));
+  // Parse an index HTML response for links pointing to video files
+  async function fetchDirectoryListing(dirUrl){
+    try {
+      const resp = await fetch(dirUrl, {cache: 'no-cache'});
+      if(!resp.ok) return [];
+      const text = await resp.text();
+      // If server returned JSON (some setups), try parse it
+      try {
+        const json = JSON.parse(text);
+        if(Array.isArray(json)){
+          // assume array of filenames or objects with name
+          const names = json.map(i => (typeof i === 'string' ? i : (i.name || i.filename))).filter(Boolean);
+          return names.filter(n => VIDEO_EXTENSIONS.some(ext => n.toLowerCase().endsWith(ext)));
+        }
+      } catch (e){ /* not JSON, continue to parse as HTML */ }
+
+      // Parse HTML for anchor hrefs
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const anchors = Array.from(doc.querySelectorAll('a'));
+      const found = anchors.map(a => a.getAttribute('href') || '').filter(Boolean)
+        .map(h => {
+          // normalize relative URLs (ignore parent links)
+          if(h.startsWith('./')) h = h.slice(2);
+          if(h.startsWith('/')) h = h.slice(1);
+          return h;
+        })
+        .filter(h => VIDEO_EXTENSIONS.some(ext => h.toLowerCase().endsWith(ext)));
+      return found;
+    } catch (err) {
+      return [];
+    }
   }
 
-  duplicateChildren();
-  // start playing any videos (some browsers require interaction, but muted helps)
-  playVisibleVideos();
-
-  let rafId = null;
-  let lastTs = performance.now();
-  const NORMAL_SPEED = 56; // px/s
-  const HOVER_SPEED = 12;
-  let targetSpeed = NORMAL_SPEED;
-  let currentSpeed = NORMAL_SPEED;
-  let offset = 0;
-
-  function firstChildFullWidth(){
-    const first = track.firstElementChild;
-    if(!first) return 0;
-    const style = getComputedStyle(track);
-    const gap = parseFloat(style.columnGap || style.gap || 0) || 0;
-    const rect = first.getBoundingClientRect();
-    return Math.ceil(rect.width + gap);
-  }
-
-  const ro = new ResizeObserver(()=> {
-    offset = Math.max(0, offset % Math.max(1, firstChildFullWidth()));
-  });
-  ro.observe(track);
-
-  track.addEventListener('mouseenter', ()=> targetSpeed = HOVER_SPEED, {passive:true});
-  track.addEventListener('mouseleave', ()=> targetSpeed = NORMAL_SPEED, {passive:true});
-  track.addEventListener('focusin', ()=> targetSpeed = HOVER_SPEED);
-  track.addEventListener('focusout', ()=> targetSpeed = NORMAL_SPEED);
-
-  // keep videos playing (some browsers may pause inactive media)
-  track.addEventListener('pointerenter', ()=> playVisibleVideos());
-  track.addEventListener('pointerleave', ()=> playVisibleVideos());
-
-  function step(ts){
-    const dt = Math.min(60, ts - lastTs) / 1000;
-    lastTs = ts;
-    currentSpeed += (targetSpeed - currentSpeed) * Math.min(1, dt * 8);
-    offset += currentSpeed * dt;
-
-    const firstWidth = firstChildFullWidth();
-    if(firstWidth > 0 && offset >= firstWidth){
-      while(track.firstElementChild && offset >= firstChildFullWidth()){
-        offset -= firstChildFullWidth();
-        // move first to end and ensure its video is playing
-        const moved = track.firstElementChild;
-        track.appendChild(moved);
-        const v = moved.querySelector('video');
-        if(v){
-          v.play().catch(()=>{});
+  // Try to discover files in /portfolio/ using multiple strategies.
+  // 1) Attempt directory HTML listing at /portfolio/
+  // 2) Attempt to fetch /portfolio/index.json if present (common convenience)
+  // 3) If none found, leave the carousel empty (no hardcoded filenames are referenced).
+  async function discoverPortfolioFiles(){
+    const dirPath = '/portfolio/';
+    // strategy A: directory listing HTML
+    let files = await fetchDirectoryListing(dirPath);
+    if(files.length) return files.map(f => (f.startsWith('/') ? f : (dirPath + f)));
+    // strategy B: try index.json
+    try {
+      const resp = await fetch(dirPath + 'index.json', {cache:'no-cache'});
+      if(resp.ok){
+        const json = await resp.json();
+        if(Array.isArray(json) && json.length){
+          const names = json.map(i => (typeof i === 'string' ? i : (i.name || i.filename))).filter(Boolean);
+          const vids = names.filter(n => VIDEO_EXTENSIONS.some(ext => n.toLowerCase().endsWith(ext)));
+          if(vids.length) return vids.map(n => (n.startsWith('/') ? n : dirPath + n));
         }
       }
-    }
-
-    track.style.transform = `translateX(${-offset}px)`;
-    // ensure videos remain playing
-    playVisibleVideos();
-    rafId = requestAnimationFrame(step);
+    } catch(e){}
+    // nothing found
+    return [];
   }
 
-  rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
+  // populate track with discovered video cards
+  async function populate(){
+    const files = await discoverPortfolioFiles();
+    if(!files || !files.length) return; // nothing to do (no hardcoded fallbacks)
+    track.innerHTML = '';
+    files.forEach(src => {
+      const card = createVideoCard(src);
+      track.appendChild(card);
+    });
+    // duplicate children to support smooth continuous flow (existing carousel logic relies on DOM cycling)
+    const clones = Array.from(track.children).map(c => c.cloneNode(true));
+    clones.forEach(c => track.appendChild(c));
+    // attempt to start playing videos (muted enables autoplay on most browsers)
+    Array.from(track.querySelectorAll('video')).forEach(v => v.play().catch(()=>{}));
+  }
 
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.hidden){
-      if(rafId) cancelAnimationFrame(rafId);
-      rafId = null;
-    } else {
-      if(!rafId){
-        lastTs = performance.now();
-        rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
-      }
-      // resume playing videos when visible again
-      playVisibleVideos();
+  // After populating, run the same carousel runtime logic (kept functionally identical)
+  (async function initCarousel(){
+    await populate();
+
+    // ensure videos autoplay & keep playing while visible
+    function playVisibleVideos(){
+      const vids = Array.from(track.querySelectorAll('video'));
+      vids.forEach(v => {
+        if (v.paused) v.play().catch(()=>{});
+      });
     }
-  });
+
+    let rafId = null;
+    let lastTs = performance.now();
+    const NORMAL_SPEED = 56; // px/s
+    const HOVER_SPEED = 12;
+    let targetSpeed = NORMAL_SPEED;
+    let currentSpeed = NORMAL_SPEED;
+    let offset = 0;
+
+    function firstChildFullWidth(){
+      const first = track.firstElementChild;
+      if(!first) return 0;
+      const style = getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || 0) || 0;
+      const rect = first.getBoundingClientRect();
+      return Math.ceil(rect.width + gap);
+    }
+
+    const ro = new ResizeObserver(()=> {
+      offset = Math.max(0, offset % Math.max(1, firstChildFullWidth()));
+    });
+    ro.observe(track);
+
+    track.addEventListener('mouseenter', ()=> targetSpeed = HOVER_SPEED, {passive:true});
+    track.addEventListener('mouseleave', ()=> targetSpeed = NORMAL_SPEED, {passive:true});
+    track.addEventListener('focusin', ()=> targetSpeed = HOVER_SPEED);
+    track.addEventListener('focusout', ()=> targetSpeed = NORMAL_SPEED);
+
+    track.addEventListener('pointerenter', ()=> playVisibleVideos());
+    track.addEventListener('pointerleave', ()=> playVisibleVideos());
+
+    function step(ts){
+      const dt = Math.min(60, ts - lastTs) / 1000;
+      lastTs = ts;
+      currentSpeed += (targetSpeed - currentSpeed) * Math.min(1, dt * 8);
+      offset += currentSpeed * dt;
+
+      const firstWidth = firstChildFullWidth();
+      if(firstWidth > 0 && offset >= firstWidth){
+        while(track.firstElementChild && offset >= firstChildFullWidth()){
+          offset -= firstChildFullWidth();
+          const moved = track.firstElementChild;
+          track.appendChild(moved);
+          const v = moved.querySelector('video');
+          if(v) v.play().catch(()=>{});
+        }
+      }
+
+      track.style.transform = `translateX(${-offset}px)`;
+      playVisibleVideos();
+      rafId = requestAnimationFrame(step);
+    }
+
+    rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
+
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){
+        if(rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+      } else {
+        if(!rafId){
+          lastTs = performance.now();
+          rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
+        }
+        playVisibleVideos();
+      }
+    });
+  })();
 })();
 
 /* User Reviews carousel - data loaded from external reviews.json (with fallback) */
