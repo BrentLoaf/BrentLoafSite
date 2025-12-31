@@ -420,24 +420,11 @@ form.addEventListener('submit', async (ev)=>{
 
   // Discover files using multiple strategies and return absolute-ish paths usable by the page
   async function discoverPortfolioFiles(){
-    const dirPath = './portfolio/';
-    // strategy A: directory listing HTML
-    let files = await fetchDirectoryListing(dirPath);
-    if(files.length) return files.map(f => (f.startsWith('/') ? f : (dirPath + f)));
-    // strategy B: try index.json
-    try {
-      const resp = await fetch(dirPath + 'index.json', {cache:'no-cache'});
-      if(resp.ok){
-        const json = await resp.json();
-        if(Array.isArray(json) && json.length){
-          const names = json.map(i => (typeof i === 'string' ? i : (i.name || i.filename))).filter(Boolean);
-          const vids = names.filter(n => VIDEO_EXTENSIONS.some(ext => n.toLowerCase().endsWith(ext)));
-          if(vids.length) return vids.map(n => (n.startsWith('/') ? n : dirPath + n));
-        }
-      }
-    } catch(e){}
-    // nothing found
-    return [];
+    const files = [];
+    for(let i = 1; i <= 5; i++){
+      files.push(`portfolio/${i}.mp4`);
+    }
+    return files;
   }
 
   // Ensure track always contains at least placeholder cards so structure is visible
