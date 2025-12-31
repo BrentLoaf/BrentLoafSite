@@ -342,15 +342,32 @@ form.addEventListener('submit', async (ev)=>{
 })(); 
 // carousel: no JS changes required for hover scaling; styling handles the hover scale & vertical alignment
 
-/* Portfolio carousel: continuous autoplaying videos (matches behavior of features & reviews)
-   Videos are discovered at runtime by scanning the /portfolio/ directory for known video extensions.
-   This keeps the carousel behaviour unchanged while allowing adding/removing files from the folder
-   without editing the code. */
+/* Portfolio carousel: ensure DOM structure is always present, then dynamically discover videos in /portfolio/ */
 (function(){
   const track = document.getElementById('portfolioTrack');
   if(!track) return;
 
-  const VIDEO_EXTENSIONS = ['.mp4','.webm','.mov','.ogg','.mkv','.mpg','.mpeg','.avi',' .qt'];
+  const VIDEO_EXTENSIONS = ['.mp4','.webm','.mov','.ogg','.mkv','.mpg','.mpeg','.avi','.qt'];
+
+  // create a generic empty card (placeholder) so carousel is visible even if no videos found
+  function createPlaceholderCard(){
+    const article = document.createElement('article');
+    article.className = 'card';
+    article.setAttribute('role','listitem');
+    // create an inner empty block so styling shows the card area
+    const placeholder = document.createElement('div');
+    placeholder.style.width = '100%';
+    placeholder.style.height = '100%';
+    placeholder.style.minHeight = '140px';
+    placeholder.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4))';
+    placeholder.style.display = 'flex';
+    placeholder.style.alignItems = 'center';
+    placeholder.style.justifyContent = 'center';
+    placeholder.style.color = 'rgba(255,255,255,0.06)';
+    placeholder.textContent = '';
+    article.appendChild(placeholder);
+    return article;
+  }
 
   // create an article.card element with a video child for a given src
   function createVideoCard(src){
@@ -379,7 +396,6 @@ form.addEventListener('submit', async (ev)=>{
       try {
         const json = JSON.parse(text);
         if(Array.isArray(json)){
-          // assume array of filenames or objects with name
           const names = json.map(i => (typeof i === 'string' ? i : (i.name || i.filename))).filter(Boolean);
           return names.filter(n => VIDEO_EXTENSIONS.some(ext => n.toLowerCase().endsWith(ext)));
         }
@@ -391,7 +407,6 @@ form.addEventListener('submit', async (ev)=>{
       const anchors = Array.from(doc.querySelectorAll('a'));
       const found = anchors.map(a => a.getAttribute('href') || '').filter(Boolean)
         .map(h => {
-          // normalize relative URLs (ignore parent links)
           if(h.startsWith('./')) h = h.slice(2);
           if(h.startsWith('/')) h = h.slice(1);
           return h;
@@ -403,10 +418,7 @@ form.addEventListener('submit', async (ev)=>{
     }
   }
 
-  // Try to discover files in /portfolio/ using multiple strategies.
-  // 1) Attempt directory HTML listing at /portfolio/
-  // 2) Attempt to fetch /portfolio/index.json if present (common convenience)
-  // 3) If none found, leave the carousel empty (no hardcoded filenames are referenced).
+  // Discover files using multiple strategies and return absolute-ish paths usable by the page
   async function discoverPortfolioFiles(){
     const dirPath = '/portfolio/';
     // strategy A: directory listing HTML
@@ -428,34 +440,45 @@ form.addEventListener('submit', async (ev)=>{
     return [];
   }
 
-  // populate track with discovered video cards
+  // Ensure track always contains at least placeholder cards so structure is visible
+  function ensureStructure(){
+    if(track.children.length === 0){
+      // create a few placeholder cards so the carousel area is visible
+      for(let i=0;i<3;i++){
+        track.appendChild(createPlaceholderCard());
+      }
+      // duplicate placeholders to allow the scrolling script to operate (it cycles DOM children)
+      const clones = Array.from(track.children).map(c => c.cloneNode(true));
+      clones.forEach(c => track.appendChild(c));
+    }
+  }
+
+  // populate track with discovered video cards; if none found, keep placeholders
   async function populate(){
     const files = await discoverPortfolioFiles();
-    if(!files || !files.length) return; // nothing to do (no hardcoded fallbacks)
+    if(!files || !files.length) {
+      // nothing found — leave existing placeholders intact (ensureStructure called earlier)
+      return;
+    }
+    // clear and add real video cards
     track.innerHTML = '';
     files.forEach(src => {
       const card = createVideoCard(src);
       track.appendChild(card);
     });
-    // duplicate children to support smooth continuous flow (existing carousel logic relies on DOM cycling)
+    // duplicate children to support smooth continuous flow
     const clones = Array.from(track.children).map(c => c.cloneNode(true));
     clones.forEach(c => track.appendChild(c));
-    // attempt to start playing videos (muted enables autoplay on most browsers)
+    // start playing videos (muted enables autoplay on most browsers)
     Array.from(track.querySelectorAll('video')).forEach(v => v.play().catch(()=>{}));
   }
 
-  // After populating, run the same carousel runtime logic (kept functionally identical)
+  // Initialize: ensure structure first, then try to populate with real videos, then start carousel runtime logic
   (async function initCarousel(){
-    await populate();
-
-    // ensure videos autoplay & keep playing while visible
-    function playVisibleVideos(){
-      const vids = Array.from(track.querySelectorAll('video'));
-      vids.forEach(v => {
-        if (v.paused) v.play().catch(()=>{});
-      });
-    }
-
+    ensureStructure();
+    // attempt discovery/population, but don't block the UI if it fails
+    populate().catch(()=>{});
+    // The runtime carousel logic (kept functionally identical to other carousels)
     let rafId = null;
     let lastTs = performance.now();
     const NORMAL_SPEED = 56; // px/s
@@ -482,6 +505,13 @@ form.addEventListener('submit', async (ev)=>{
     track.addEventListener('mouseleave', ()=> targetSpeed = NORMAL_SPEED, {passive:true});
     track.addEventListener('focusin', ()=> targetSpeed = HOVER_SPEED);
     track.addEventListener('focusout', ()=> targetSpeed = NORMAL_SPEED);
+
+    function playVisibleVideos(){
+      const vids = Array.from(track.querySelectorAll('video'));
+      vids.forEach(v => {
+        if (v.paused) v.play().catch(()=>{});
+      });
+    }
 
     track.addEventListener('pointerenter', ()=> playVisibleVideos());
     track.addEventListener('pointerleave', ()=> playVisibleVideos());
