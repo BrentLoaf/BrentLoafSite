@@ -8,7 +8,48 @@ const deadlineInput = document.getElementById('deadline');
 const includeDeadline = document.getElementById('includeDeadline');
 const budgetInput = document.getElementById('budget');
 
+// direct contact copy elements
+const emailTextEl = document.getElementById('emailText');
+const discordTextEl = document.getElementById('discordText');
+const copyEmailBtn = document.getElementById('copyEmailBtn');
+const copyDiscordBtn = document.getElementById('copyDiscordBtn');
+
 year.textContent = new Date().getFullYear();
+
+// Copy button behavior with temporary feedback
+async function copyToClipboard(text, button){
+  if(!navigator.clipboard) {
+    // fallback: select & copy
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  } else {
+    try { await navigator.clipboard.writeText(text); } catch(e) {}
+  }
+
+  // simple visual feedback on the button
+  if(button){
+    const orig = button.textContent;
+    button.textContent = 'Copied';
+    button.classList.add('copy-success');
+    setTimeout(()=> {
+      button.textContent = orig;
+      button.classList.remove('copy-success');
+    }, 1500);
+  }
+}
+
+if(copyEmailBtn && emailTextEl){
+  copyEmailBtn.addEventListener('click', ()=> copyToClipboard(emailTextEl.textContent.trim(), copyEmailBtn));
+}
+if(copyDiscordBtn && discordTextEl){
+  copyDiscordBtn.addEventListener('click', ()=> copyToClipboard(discordTextEl.textContent.trim(), copyDiscordBtn));
+}
 
 function scrollToContact(e){
   e?.preventDefault();
@@ -300,6 +341,106 @@ form.addEventListener('submit', async (ev)=>{
   });
 })(); 
 // carousel: no JS changes required for hover scaling; styling handles the hover scale & vertical alignment
+
+/* Portfolio carousel: continuous autoplaying videos (matches behavior of features & reviews) */
+(function(){
+  const track = document.getElementById('portfolioTrack');
+  if(!track) return;
+
+  // ensure videos autoplay & play while visible in DOM
+  function playVisibleVideos(){
+    const vids = Array.from(track.querySelectorAll('video'));
+    vids.forEach(v => {
+      // start playing if not already; browsers require muted for autoplay which we set
+      if (v.paused) {
+        v.play().catch(()=>{ /* ignore play errors */ });
+      }
+    });
+  }
+
+  // Clone items to ensure smooth continuous flow
+  function duplicateChildren(){
+    const children = Array.from(track.children);
+    children.forEach(c => track.appendChild(c.cloneNode(true)));
+  }
+
+  duplicateChildren();
+  // start playing any videos (some browsers require interaction, but muted helps)
+  playVisibleVideos();
+
+  let rafId = null;
+  let lastTs = performance.now();
+  const NORMAL_SPEED = 56; // px/s
+  const HOVER_SPEED = 12;
+  let targetSpeed = NORMAL_SPEED;
+  let currentSpeed = NORMAL_SPEED;
+  let offset = 0;
+
+  function firstChildFullWidth(){
+    const first = track.firstElementChild;
+    if(!first) return 0;
+    const style = getComputedStyle(track);
+    const gap = parseFloat(style.columnGap || style.gap || 0) || 0;
+    const rect = first.getBoundingClientRect();
+    return Math.ceil(rect.width + gap);
+  }
+
+  const ro = new ResizeObserver(()=> {
+    offset = Math.max(0, offset % Math.max(1, firstChildFullWidth()));
+  });
+  ro.observe(track);
+
+  track.addEventListener('mouseenter', ()=> targetSpeed = HOVER_SPEED, {passive:true});
+  track.addEventListener('mouseleave', ()=> targetSpeed = NORMAL_SPEED, {passive:true});
+  track.addEventListener('focusin', ()=> targetSpeed = HOVER_SPEED);
+  track.addEventListener('focusout', ()=> targetSpeed = NORMAL_SPEED);
+
+  // keep videos playing (some browsers may pause inactive media)
+  track.addEventListener('pointerenter', ()=> playVisibleVideos());
+  track.addEventListener('pointerleave', ()=> playVisibleVideos());
+
+  function step(ts){
+    const dt = Math.min(60, ts - lastTs) / 1000;
+    lastTs = ts;
+    currentSpeed += (targetSpeed - currentSpeed) * Math.min(1, dt * 8);
+    offset += currentSpeed * dt;
+
+    const firstWidth = firstChildFullWidth();
+    if(firstWidth > 0 && offset >= firstWidth){
+      while(track.firstElementChild && offset >= firstChildFullWidth()){
+        offset -= firstChildFullWidth();
+        // move first to end and ensure its video is playing
+        const moved = track.firstElementChild;
+        track.appendChild(moved);
+        const v = moved.querySelector('video');
+        if(v){
+          v.play().catch(()=>{});
+        }
+      }
+    }
+
+    track.style.transform = `translateX(${-offset}px)`;
+    // ensure videos remain playing
+    playVisibleVideos();
+    rafId = requestAnimationFrame(step);
+  }
+
+  rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
+
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    } else {
+      if(!rafId){
+        lastTs = performance.now();
+        rafId = requestAnimationFrame((t)=>{ lastTs = t; step(t); });
+      }
+      // resume playing videos when visible again
+      playVisibleVideos();
+    }
+  });
+})();
 
 /* User Reviews carousel - data loaded from external reviews.json (with fallback) */
 (async function(){

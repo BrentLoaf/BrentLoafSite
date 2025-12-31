@@ -80,6 +80,32 @@
       </div>
     </section>
 
+    <section class="portfolio" id="portfolio">
+      <div class="container">
+        <h2>Visual Portfolio</h2>
+
+        <div class="carousel-viewport" aria-label="Portfolio carousel">
+          <div class="carousel-track" id="portfolioTrack" role="list">
+            <article class="card" role="listitem">
+              <video src="/ssstwitter.com_1742354390201.mp4" muted playsinline loop preload="metadata"></video>
+            </article>
+            <article class="card" role="listitem">
+              <video src="/2024_07_01_07_16_07.mp4" muted playsinline loop preload="metadata"></video>
+            </article>
+            <article class="card" role="listitem">
+              <video src="/8mb.video-Qs4-a4PsLrs3%20(1).mp4" muted playsinline loop preload="metadata"></video>
+            </article>
+            <article class="card" role="listitem">
+              <video src="/8mb.video-VvG-R4HBIeej%20(1).mp4" muted playsinline loop preload="metadata"></video>
+            </article>
+            <article class="card" role="listitem">
+              <video src="/8mb.video-1zT-Ds7Q3FtV.mp4" muted playsinline loop preload="metadata"></video>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="reviews" id="reviews">
       <div class="container">
         <h2>Client Reviews</h2>
@@ -119,10 +145,29 @@
       </div>
     </section>
 
+
+
     <section class="contact" id="contact">
       <div class="container">
         <form id="contactForm" method="POST" action="https://formspree.io/f/xdaovabb" novalidate>
           <h2 class="form-title">Request a quote</h2>
+
+          <div class="direct-contacts" aria-label="Direct contact options">
+            <p class="direct-intro">Would rather contact me directly? Here are my contacts!</p>
+            <div class="direct-list">
+              <div class="direct-item">
+                <strong>Email:</strong>
+                <span id="emailText" class="direct-value mono">bussinessloaf</span>
+                <button type="button" id="copyEmailBtn" class="copy-btn" aria-label="Copy email">Copy</button>
+              </div>
+              <div class="direct-item">
+                <strong>Discord:</strong>
+                <span id="discordText" class="direct-value mono">EEEEE</span>
+                <button type="button" id="copyDiscordBtn" class="copy-btn" aria-label="Copy discord">Copy</button>
+              </div>
+            </div>
+          </div>
+
           <div class="field-row">
             <label for="name">Name *</label>
             <input id="name" name="name" required />

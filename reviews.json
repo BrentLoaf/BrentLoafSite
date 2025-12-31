@@ -5,68 +5,28 @@
     "review": "This was a very good plugin."
   },
   {
-    "name": "Steve",
-    "stars": 5.0,
-    "review": "Installed it and my server immediately felt 12% cooler. Highly scientific."
-  },
-  {
-    "name": "Creeper",
-    "stars": 1.0,
-    "review": "Did not explode. Very disappointed."
-  },
-  {
-    "name": "Alex",
+    "name": "Ava J.",
     "stars": 4.9,
-    "review": "I don’t know what half the settings do but I turned them all on and now I feel powerful."
+    "review": "Incredible plugin work — stable, well-documented, and fast. Server ran smoothly during peak times."
   },
   {
-    "name": "Herobrine",
+    "name": "Marcus P.",
+    "stars": 4.6,
+    "review": "Great communication and delivered exactly what we wanted. Players love the custom items."
+  },
+  {
+    "name": "Sofia L.",
     "stars": 5.0,
-    "review": "Removed me from the server. Respect."
+    "review": "Top-tier development and quick iterations. Highly recommended for serious servers."
   },
   {
-    "name": "Grandma42",
-    "stars": 4.8,
-    "review": "I thought this was Facebook but now my grandson says the server is \"cracked\"."
-  },
-  {
-    "name": "NotchTotally",
-    "stars": 3.3,
-    "review": "Pretty good but it didn’t add diamonds to my inventory automatically."
-  },
-  {
-    "name": "AFKFarmer",
-    "stars": 4.7,
-    "review": "Went to make a sandwich, came back, and everything was still working. Impressive."
-  },
-  {
-    "name": "LagLord",
-    "stars": 2.0,
-    "review": "Still lagging but now I lag with style."
-  },
-  {
-    "name": "ConsoleWarrior",
-    "stars": 5.0,
-    "review": "I typed /help and my life started to make sense."
-  },
-  {
-    "name": "PixelPirate",
-    "stars": 4.4,
-    "review": "Arrr, me server be runnin’ smoother than the high seas!"
-  },
-  {
-    "name": "404User",
-    "stars": 0.4,
-    "review": "I don’t know how I got here but I blame this plugin."
-  },
-  {
-    "name": "TryHardTim",
+    "name": "Noah K.",
     "stars": 4.2,
-    "review": "Gained 3 FPS and immediately went pro."
+    "review": "Solid optimization and bugfixes; a few minor tweaks requested but support was responsive."
   },
   {
-    "name": "BedrockBob",
-    "stars": 3.7,
-    "review": "Works great, still can’t break bedrock though. Minus one star for realism."
+    "name": "Riley M.",
+    "stars": 4.7,
+    "review": "Clean codebase and configurable features. Made deployment straightforward."
   }
 ]

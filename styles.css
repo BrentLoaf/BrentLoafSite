@@ -371,6 +371,53 @@ a:hover, .link:hover { opacity:0.95; text-shadow: 0 0 8px rgba(47,231,169,0.12) 
   display:block;
 }
 
+/* Direct contact block below the form title — subtle, compact, and aligned with form aesthetics */
+.direct-contacts{
+  width:100%;
+  max-width:620px;
+  margin:8px auto 12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background: rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03);
+  text-align:center;
+}
+.direct-contacts .direct-intro{
+  margin:0 0 8px;
+  font-weight:600;
+  color:inherit;
+  font-size:0.98rem;
+}
+.direct-list{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}
+.direct-item{color:var(--muted);font-size:0.95rem}
+.direct-item .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; color:var(--muted)}
+.direct-contacts .link{color:var(--accent-mint);word-break:break-all}
+
+/* copy button styling placed next to contact values */
+.copy-btn{
+  margin-left:10px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color:var(--muted);
+  padding:6px 10px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  font-size:0.88rem;
+  transition: background .12s, color .12s, transform .08s;
+}
+.copy-btn:hover{
+  background: rgba(255,255,255,0.02);
+  color:#fff;
+  transform: translateY(-1px);
+}
+.copy-btn.copy-success{
+  background: rgba(47,231,169,0.12);
+  color: #06110b;
+  border-color: rgba(47,231,169,0.28);
+}
+.direct-value{margin-left:8px}
+
 /* section separators/dividers use mint visibly */
 hr.section-sep{border:0;height:2px;background:linear-gradient(90deg, transparent, rgba(47,231,169,0.28), transparent)}
 
@@ -602,4 +649,66 @@ hr.section-sep{border:0;height:2px;background:linear-gradient(90deg, transparent
   .hero-inner{padding:24px}
   .container{padding:28px 18px}
   .contact form{padding:16px}
+}
+
+/* Portfolio video-specific styles */
+.portfolio .carousel-viewport{
+  overflow-x: hidden;
+  overflow-y: visible;
+  width:100%;
+  margin-top:8px;
+  padding-top:18px;
+  padding-bottom:18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+.portfolio .carousel-track{
+  display:flex;
+  gap:18px;
+  align-items:stretch;
+  will-change: transform;
+}
+.portfolio .card{
+  min-width:280px;
+  max-width:420px;
+  flex: 0 0 auto;
+  padding:8px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+  position:relative;
+  transform-origin: center bottom;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1);
+  cursor: default;
+  box-shadow: none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* Video element fills the card while preserving aspect ratio */
+.portfolio .card video{
+  width:100%;
+  height:100%;
+  max-height:220px;
+  object-fit:cover;
+  border-radius:8px;
+  display:block;
+  background:#000;
+}
+
+/* Slight scale on hover without glow */
+.portfolio .card:hover,
+.portfolio .card:focus,
+.portfolio .card.is-pointer-over{
+  transform: scale(1.03);
+  z-index:6;
+}
+
+/* Responsive tweaks for smaller screens */
+@media (max-width:1000px){
+  .portfolio .card{min-width:220px;max-width:320px}
+  .portfolio .card video{max-height:180px}
 }
