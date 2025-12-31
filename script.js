@@ -307,18 +307,12 @@ form.addEventListener('submit', async (ev)=>{
   if(!track) return;
 
   // Fallback data used if fetching reviews.json fails for any reason
-  const FALLBACK_REVIEWS = [
-    { name: "Ava J.", rating: 4.9, text: "Incredible plugin work — stable, well-documented, and fast. Server ran smoothly during peak times." },
-    { name: "Marcus P.", rating: 4.6, text: "Great communication and delivered exactly what we wanted. Players love the custom items." },
-    { name: "Sofia L.", rating: 5.0, text: "Top-tier development and quick iterations. Highly recommended for serious servers." },
-    { name: "Noah K.", rating: 4.2, text: "Solid optimization and bugfixes; a few minor tweaks requested but support was responsive." },
-    { name: "Riley M.", rating: 1.7, text: "Clean codebase and configurable features. Made deployment straightforward." }
-  ];
+  const FALLBACK_REVIEWS = [{ name: "494", rating: 5, text: "File not found." }];
 
   // Try to fetch reviews.json from the site root; fall back to the embedded list on error.
   let reviewsData = FALLBACK_REVIEWS;
   try {
-    const resp = await fetch('/reviews.json', {cache: 'no-cache'});
+    const resp = await fetch('reviews.json', {cache: 'no-cache'});
     if(resp.ok){
       const json = await resp.json();
       // Normalize JSON entries to expected shape (name, rating/stars, text/review)

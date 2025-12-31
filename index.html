@@ -7,26 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- File-protocol warning shown only when opening index.html locally (file://) -->
-  <div id="fileProtocolWarning" style="display:none;position:fixed;inset:16px;z-index:60;pointer-events:auto;">
-    <div style="max-width:860px;margin:0 auto;background:rgba(0,0,0,0.72);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(6px);padding:14px;border-radius:10px;color:#fff;font-size:13px;line-height:1.35;">
-      <strong style="display:block;margin-bottom:6px;">Local file access detected — scripts blocked by the browser</strong>
-      This site was opened using the file:// protocol, which prevents external modules from loading due to browser security (CORS). To run the site locally, serve the folder over HTTP (example: run "npx serve" or "python -m http.server" in the site directory) and open http://localhost:PORT instead.
-    </div>
-  </div>
-  <script>
-    (function(){
-      try {
-        // origin === 'null' or protocol === 'file:' indicates local file opening in many browsers
-        if (location.protocol === 'file:' || location.origin === 'null') {
-          var el = document.getElementById('fileProtocolWarning');
-          if (el) el.style.display = 'block';
-        }
-      } catch (e) {
-        // ignore errors
-      }
-    })();
-  </script>
   <header class="site-header">
     <nav class="nav">
       <div class="brand">BrentLoaf</div>
