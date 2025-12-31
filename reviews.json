@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Jason",
+    "stars": 4.6,
+    "review": "This was a very good plugin."
+  },
+  {
+    "name": "Ava J.",
+    "stars": 4.9,
+    "review": "Incredible plugin work — stable, well-documented, and fast. Server ran smoothly during peak times."
+  },
+  {
+    "name": "Marcus P.",
+    "stars": 4.6,
+    "review": "Great communication and delivered exactly what we wanted. Players love the custom items."
+  },
+  {
+    "name": "Sofia L.",
+    "stars": 5.0,
+    "review": "Top-tier development and quick iterations. Highly recommended for serious servers."
+  },
+  {
+    "name": "Noah K.",
+    "stars": 4.2,
+    "review": "Solid optimization and bugfixes; a few minor tweaks requested but support was responsive."
+  },
+  {
+    "name": "Riley M.",
+    "stars": 4.7,
+    "review": "Clean codebase and configurable features. Made deployment straightforward."
+  }
+]
