@@ -420,7 +420,7 @@ form.addEventListener('submit', async (ev)=>{
 
   // Discover files using multiple strategies and return absolute-ish paths usable by the page
   async function discoverPortfolioFiles(){
-    const dirPath = '/portfolio/';
+    const dirPath = './portfolio/';
     // strategy A: directory listing HTML
     let files = await fetchDirectoryListing(dirPath);
     if(files.length) return files.map(f => (f.startsWith('/') ? f : (dirPath + f)));
