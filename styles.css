@@ -1,0 +1,605 @@
+:root{
+  --bg:#0b0c0e; /* deep charcoal */
+  --panel: rgba(255,255,255,0.04);
+  --muted:#bfc8c6;
+  --accent-mint:#2fe7a9; /* stronger mint for visibility */
+  --accent-rose:#ff4aa0; /* vivid reddish-magenta */
+  --accent-gradient: linear-gradient(90deg, var(--accent-mint), var(--accent-rose));
+  --glass: rgba(255,255,255,0.04);
+  --radius:14px;
+  --max-width:1100px;
+  --gap:28px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: dark;
+}
+
+/* Base layout */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background: linear-gradient(180deg,#070708 0%, #0b0c0e 60%, #050506 100%);
+  color:#e9f2f1;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  padding-bottom:56px;
+}
+
+.container{
+  max-width:var(--max-width);
+  margin:0 auto;
+  padding:48px 28px;
+
+  /* Center all direct content horizontally and vertically */
+  display:flex;
+  flex-direction:column;
+  align-items:center;    /* horizontal centering of children */
+  justify-content:center;/* vertical centering within the container's own area */
+  text-align:center;     /* center text inside children by default */
+}
+
+/* Header */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--max-width);margin:0 auto}
+.brand{font-weight:700;letter-spacing:0.6px;font-size:1.02rem;color:var(--muted)}
+
+/* CTA styling - primary buttons remain mint green, no default glow, subtle green glow on hover */
+button.primary{
+  background: linear-gradient(180deg, rgba(47,231,169,0.12), rgba(47,231,169,0.06));
+  border: 1px solid rgba(47,231,169,0.28);
+  color:#ffffff;
+  padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;
+  box-shadow: 0 6px 20px rgba(47,231,169,0.08), 0 0 36px rgba(47,231,169,0.06); /* persistent subtle mint glow */
+  transition:box-shadow .16s, transform .12s, background-color .12s, border-color .12s;
+}
+button.primary:hover{
+  background: linear-gradient(180deg, rgba(47,231,169,0.16), rgba(47,231,169,0.06));
+  border-color: rgba(47,231,169,0.65);
+  color:#ffffff;
+  box-shadow: 0 10px 36px rgba(47,231,169,0.16), 0 0 70px rgba(47,231,169,0.12); /* stronger on hover */
+  transform: translateY(-2px);
+}
+
+/* .cta kept for secondary actions but styled green to match primary buttons */
+.cta{
+  background: transparent;
+  color:var(--accent-mint);
+  border:1px solid rgba(47,231,169,0.12);
+  padding:8px 12px;border-radius:12px;font-weight:700;cursor:pointer;
+  box-shadow: 0 4px 16px rgba(47,231,169,0.06); /* persistent glow */
+  transition: box-shadow .16s, transform .12s, color .12s, border-color .12s;
+}
+.cta:hover{
+  color: #ffffff;
+  border-color: rgba(47,231,169,0.5);
+  box-shadow: 0 10px 24px rgba(47,231,169,0.14);
+  transform: translateY(-1px);
+}
+
+.reviews .card {
+  display: flex;
+  flex-direction: column;  /* stack title, stars, and text vertically */
+  align-items: center;     /* center horizontally */
+}
+
+/* Ensure stars sit under the title with spacing */
+.reviews .stars {
+  display: flex;           /* horizontal row of stars */
+  justify-content: center; /* center them under the title */
+  margin: 6px 0 0;         /* space above stars */
+}
+
+/* Hero */
+.hero{padding:68px 0;display:flex;align-items:center;justify-content:center}
+.hero-inner{
+  width:100%;
+  max-width:940px;
+  /* center all inner content horizontally & vertically */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background: rgba(255,255,255,0.02);
+  padding:40px;border-radius:18px;
+  box-shadow: 0 10px 40px rgba(2,6,8,0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.hero h1{
+  margin:0 0 14px;font-size:1.75rem;line-height:1.15;
+  position:relative;
+  padding-bottom:8px;
+  display:block;
+  width:100%;
+  text-align:center;
+}
+/* Hero title underline uses mint→magenta gradient and matches text width */
+.hero h1::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:4px;
+  width:100%;
+  border-radius:6px;
+  background: var(--accent-gradient);
+  opacity:0.95;
+  filter: drop-shadow(0 6px 18px rgba(47,231,169,0.12)) drop-shadow(0 4px 12px rgba(255,74,140,0.10));
+  box-shadow: 0 0 30px rgba(47,231,169,0.06), 0 0 28px rgba(255,74,140,0.05);
+}
+.lead{margin:0 0 20px;color:var(--muted);font-size:1.03rem}
+.hero-actions{display:flex;gap:12px;margin-bottom:12px;justify-content:center;width:100%}
+
+/* Quick stats */
+.quick-stats{display:flex;gap:12px;margin:18px 0 0;padding:0;list-style:none;color:var(--muted);font-size:13px;justify-content:center;flex-wrap:wrap}
+.quick-stats li{
+  background: rgba(255,255,255,0.015);
+  padding:8px 12px;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.02);
+}
+
+/* Sections & cards */
+.services,.workflow,.projects,.contact{padding:24px 0}
+h2{
+  margin:0 0 18px;font-size:1.15rem;
+  position:relative;
+  padding-bottom:8px;
+  display:inline-block;
+}
+/* subtle horizontal magenta separator under section titles — spans full text width */
+h2::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:2px;
+  width:100%;
+  background: linear-gradient(90deg, rgba(255,74,140,0.85), rgba(255,74,140,0.45));
+  border-radius:2px;
+  opacity:0.95;
+  filter: drop-shadow(0 6px 16px rgba(255,74,140,0.12));
+  box-shadow: 0 0 22px rgba(255,74,140,0.06);
+}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{
+  background: rgba(255,255,255,0.04);
+  padding:22px;border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(12,14,16,0.6), 0 0 0 4px rgba(255,74,140,0.02) inset;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .14s, background-color .12s;
+  position:relative;
+  transform-origin: center top; /* scale downwards from top so cards don't shift other elements */
+  will-change: transform, box-shadow;
+  z-index: 0;
+}
+/* small glow outline using magenta */
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:14px;
+  pointer-events:none;
+  box-shadow: 0 0 42px rgba(255,74,140,0.12), 0 6px 28px rgba(255,74,140,0.06);
+  opacity:0.95;
+  transition: box-shadow .16s, transform .16s;
+}
+
+/* Remove upward translate on hover globally; only carousel cards get a subtle scale-up */
+.card:hover{
+  /* keep other card contexts unaffected by upward translation */
+  box-shadow: 0 10px 34px rgba(12,18,20,0.6);
+}
+
+/* Carousel-specific hover: slight scale without layout shift and no upward movement */
+.services .card{
+  min-width:260px; /* ensures readable one-line card size on narrow viewports */
+  max-width:320px;
+  flex: 0 0 auto;
+  padding:18px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(12,14,16,0.6);
+  position:relative;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .14s;
+  cursor: default;
+  transform-origin: center top;
+  z-index: 0;
+}
+
+/* scale the hovered card slightly without any glow/ shadow and without shifting layout */
+.services .card:hover,
+.services .card:focus{
+  transform: scale(1.04);
+  /* no shadow/glow or vertical translation — scaling only */
+}
+
+/* Slight emphasis when focused (accessibility) without moving layout */
+.services .card:focus{
+  outline: 2px solid rgba(47,231,169,0.12);
+  outline-offset: 4px;
+}
+/* Card header underline using mint→magenta gradient */
+.card h3{
+  margin:0 0 10px;font-size:1.02rem;
+  position:relative;
+  padding-bottom:8px;
+  display:inline-block;
+}
+.card h3::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  height:3px;
+  width:100%;
+  border-radius:3px;
+  background: var(--accent-gradient);
+  opacity:0.95;
+  filter: drop-shadow(0 8px 20px rgba(47,231,169,0.10)) drop-shadow(0 6px 18px rgba(255,74,140,0.08));
+  box-shadow: 0 0 28px rgba(47,231,169,0.06), 0 0 24px rgba(255,74,140,0.05);
+}
+.card p{margin:0;color:var(--muted);font-size:0.95rem}
+
+/* Steps */
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.steps li{
+  background: rgba(255,255,255,0.02);
+  padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);
+  display:flex;flex-direction:column;backdrop-filter:blur(4px);
+  box-shadow: 0 0 0 3px rgba(47,231,169,0.02) inset;
+}
+.steps li span{color:var(--muted);font-size:0.95rem;margin-top:6px}
+
+/* Examples */
+.examples{display:flex;gap:14px}
+.example{
+  flex:1;min-height:90px;
+  background: rgba(255,255,255,0.015);
+  border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:0.98rem;border:1px solid rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 0 3px rgba(47,231,169,0.02) inset;
+}
+
+/* Contact form - floating glass panel */
+.contact .container{
+  display:flex;
+  justify-content:center;
+  border-radius: 16px;
+}
+.contact form{
+  width:100%;
+  max-width:720px;
+  display:grid;gap:14px;
+  background: rgba(255,255,255,0.04);
+  padding:20px;border-radius:16px;
+  border: none;
+  border-image-source: linear-gradient(90deg, var(--accent-mint), var(--accent-rose));
+  border-image-slice:1;
+  box-shadow: 0 16px 48px rgba(2,6,8,0.7);
+  backdrop-filter: blur(10px);
+  /* ensure inner content preserves the glass look */
+  background-clip: padding-box;
+  position:relative;
+  overflow:hidden;
+}
+.contact form::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* cover entire form */
+  padding: 2px; /* thickness of the gradient outline */
+  border-radius: 16px; /* same as the form */
+  background: linear-gradient(90deg, var(--accent-mint), var(--accent-rose));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0; /* behind the form content */
+}
+.contact form > *{position:relative;z-index:1}
+.field-row{display:flex;flex-direction:column}
+label{font-size:13px;color:var(--muted);margin-bottom:6px}
+
+/* Ensure contact form labels are left-aligned while inputs remain centered within the existing layout */
+.contact .field-row label{
+  text-align: left;
+  align-self: flex-start;
+  width: 100%;
+}
+input,textarea,select{
+  background: rgba(8,9,10,0.45);
+  border:1px solid rgba(255,255,255,0.04);
+  padding:12px;border-radius:10px;color:inherit;font-size:0.96rem;outline:none;
+  transition: box-shadow .12s, border-color .12s;
+}
+input::placeholder, textarea::placeholder{color:rgba(255,255,255,0.35)}
+/* stronger mint focus visual on inputs */
+input:focus,textarea:focus,select:focus{
+  box-shadow:0 0 0 6px rgba(47,231,169,0.14);
+  border-color: rgba(47,231,169,0.65);
+}
+
+/* active field border */
+input:active,textarea:active,select:active{
+  border-color: rgba(47,231,169,0.72);
+}
+
+/* Small checkbox styling */
+input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent-mint);}
+
+/* Buttons and status */
+.form-actions{display:flex;gap:12px;align-items:center}
+button.primary{
+  padding:12px 16px;border-radius:12px;font-weight:700;
+  background: linear-gradient(90deg, rgba(47,231,169,0.14), rgba(47,231,169,0.06));
+  color:#ffffff;border:none;
+  box-shadow: none; /* remove default glow */
+  transition: box-shadow .16s, transform .12s, background .12s, border-color .12s;
+}
+button.primary:hover{
+  background: linear-gradient(90deg, rgba(47,231,169,0.18), rgba(47,231,169,0.06));
+  border-color: rgba(47,231,169,0.6);
+  color:#ffffff;
+  box-shadow: 0 10px 36px rgba(47,231,169,0.16); /* subtle mint glow on hover */
+  transform: translateY(-3px);
+}
+
+/* links use mint accent visibly (high-visibility) */
+a, .link { color: var(--accent-mint); text-decoration: none; transition: opacity .12s, text-shadow .12s }
+a:hover, .link:hover { opacity:0.95; text-shadow: 0 0 8px rgba(47,231,169,0.12) }
+
+/* form title style placed inside the form card */
+.form-title{
+  margin:0 0 8px;
+  text-align:center;
+  font-size:1.15rem;
+  font-weight:700;
+  color:inherit;
+  padding:6px 0 12px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:block;
+}
+
+/* section separators/dividers use mint visibly */
+hr.section-sep{border:0;height:2px;background:linear-gradient(90deg, transparent, rgba(47,231,169,0.28), transparent)}
+
+#formStatus{color:var(--muted);font-size:0.95rem}
+
+/* Footer */
+.site-footer{padding:22px 0;color:var(--muted);border-top:1px solid rgba(255,255,255,0.02)}
+.site-footer .container{display:flex;justify-content:center;align-items:center;padding:8px 20px;flex-direction:column;gap:6px}
+
+/* Subtle footer disclaimer — small, centered, slightly reduced opacity, no glow or borders */
+.site-footer .footer-disclaimer{
+  font-size:0.78rem;
+  color:var(--muted);
+  opacity:0.65;
+  text-align:center;
+  line-height:1.25;
+  max-width:100%;
+  /* keep layout simple and unobtrusive; no shadows, borders or accents */
+  box-shadow:none;
+  filter:none;
+}
+
+/* Services section reworked into a horizontal continuous carousel */
+
+/* Ensure container spacing remains consistent */
+.services{padding:24px 0}
+
+/* Reviews carousel matches features carousel but without glow/shadow effects */
+.reviews{padding:24px 0}
+.reviews .container{padding-top:8px;padding-bottom:8px}
+.reviews .carousel-viewport{
+  overflow-x: hidden;
+  overflow-y: visible;
+  width:100%;
+  margin-top:8px;
+  padding-top:18px;
+  padding-bottom:18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+/* re-use track layout */
+.reviews .carousel-track{
+  display:flex;
+  gap:18px;
+  align-items:stretch;
+  will-change: transform;
+}
+
+/* review card: glass look but NO glow/shadow per requirement */
+.reviews .card{
+  min-width:240px;
+  max-width:320px;
+  flex: 0 0 auto;
+  padding:18px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  position:relative;
+  transform-origin: center bottom;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1);
+  cursor: default;
+  box-shadow: none; /* explicitly remove shadows */
+}
+
+/* Center all text inside review cards */
+.reviews .card h3,
+.reviews .card p,
+.reviews .stars{
+  text-align:center;
+}
+.reviews .card h3{
+  margin-bottom:4px; /* reduce space below the name */
+}
+
+.reviews .card h3::after {
+  content: none !important;
+}
+
+/* Slight scale on hover without any glow/shadow */
+.reviews .card:hover,
+.reviews .card.is-pointer-over,
+.reviews .card:focus{
+  transform: scale(1.04);
+  z-index:6;
+  box-shadow:none;
+  outline: none;
+}
+
+/* Stars row */
+.reviews .stars{
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  justify-content:center;
+  margin:4px 0 0; /* tighten space above stars */
+}
+
+/* star svg sizing and rounded look */
+.reviews .stars svg{
+  width:20px;
+  height:20px;
+  border-radius:4px;
+  display:block;
+  flex:0 0 auto;
+}
+
+/* filled star color (soft yellow) */
+.reviews .stars .filled{ fill: #FFD66B; }
+.reviews .stars .empty{ fill: rgba(255,255,255,0.12); }
+
+/* ensure no clipping at top/bottom */
+.reviews .carousel-viewport,
+.reviews .container,
+.reviews .card{
+  padding-top:18px;
+  padding-bottom:18px;
+}
+
+/* small review text style */
+.reviews .card p{ margin:8px 0 0; color:var(--muted); font-size:0.95rem; line-height:1.36; text-align:center; }
+
+/* Responsive tweaks */
+@media (max-width:1000px){
+  .reviews .card{min-width:200px;max-width:260px;padding:14px}
+}
+
+/* Carousel viewport hides overflow and keeps one-row layout */
+.carousel-viewport{
+  /* allow horizontal clipping but keep vertical content visible so scaled cards are not cut off */
+  overflow-x: hidden;
+  overflow-y: visible;
+  width:100%;
+  margin-top:8px;
+  /* add top buffer so slight upward scaling does not clip the card */
+  padding-top:18px;
+  padding-bottom:18px; /* increased buffer so scaled cards are fully visible across sizes */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+/* Track is a horizontal flex row; we'll translate this element in JS */
+.carousel-track{
+  display:flex;
+  gap:18px;
+  align-items:stretch;
+  will-change: transform;
+}
+
+/* Reuse .card look but constrain cards for horizontal layout; remove hover transforms for carousel */
+.services .card{
+  min-width:260px; /* ensures readable one-line card size on narrow viewports */
+  max-width:320px;
+  flex: 0 0 auto;
+  padding:18px;
+  border-radius:12px;
+  background: rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(12,14,16,0.6);
+  position:relative;
+  /* grow from the bottom so the top edge doesn't get clipped when scaling up */
+  transform-origin: center bottom;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+  cursor: default;
+}
+
+.reviews .card::before {
+  content: none !important;
+}
+
+/* When a pointer is over a card we lift it visually above neighbors so it never gets visually clipped */
+.services .card.is-pointer-over{
+  z-index: 6;
+  transform: scale(1.04); /* match the hover/focus scale so pointer-enter has same effect */
+}
+
+/* Remove the decorative magenta ::before for carousel cards to keep them visually static while preserving card style */
+.services .card::before{
+  content:none;
+}
+
+/* Keep headings and paragraphs styling inside carousel; center text and make title underline span the card width without overflowing */
+.services .card h3{
+  margin:0 0 8px;
+  font-size:1.02rem;
+  padding-bottom:6px;
+  display:block;
+  width:100%;
+  text-align:center;
+  position:relative;
+}
+/* underline centered and constrained to the card content width (keeps clear of edges) */
+.services .card h3::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  height:3px;
+  width:calc(100% - 28px); /* leave modest horizontal padding so underline never touches edges */
+  max-width:100%;
+  border-radius:3px;
+  background: var(--accent-gradient);
+  opacity:0.95;
+  filter: drop-shadow(0 8px 20px rgba(47,231,169,0.10)) drop-shadow(0 6px 18px rgba(255,74,140,0.08));
+  box-shadow: 0 0 28px rgba(47,231,169,0.06), 0 0 24px rgba(255,74,140,0.05);
+}
+.services .card p{
+  margin:0;
+  color:var(--muted);
+  font-size:0.95rem;
+  line-height:1.38;
+  text-align:center;
+}
+
+/* Slight emphasis when focused (accessibility) without moving layout */
+.services .card:focus{
+  outline: 2px solid rgba(47,231,169,0.12);
+  outline-offset: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width:1000px){
+  .carousel-track{gap:12px}
+  .services .card{min-width:220px;max-width:260px;padding:14px}
+  .hero h1{font-size:1.5rem}
+  .hero-inner{padding:24px}
+  .container{padding:28px 18px}
+  .contact form{padding:16px}
+}

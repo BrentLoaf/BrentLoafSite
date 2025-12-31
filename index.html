@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paper Plugin Developer — Custom Paper plugins</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <div class="brand">BrentLoaf</div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Professional Minecraft Plugin Development for Servers</h1>
+
+        <p class="lead" style="padding-top:16px;">Create high-quality, custom plugins that bring unique features, powers, and items to your server. Each plugin is designed to enhance gameplay, offer creative mechanics, and provide reliable functionality for server owners. Focused on producing well-structured, maintainable, and fully supported plugins, these solutions deliver an engaging and tailored experience for players.</p>
+
+        <ul class="quick-stats" aria-hidden="true">
+          <li><strong>Language</strong> <span>Java</span></li>
+          <li><strong>Forks</strong> <span>Paper · Spigot · Purpur</span></li>
+          <li><strong>Target Versions</strong> <span>1.19+ / 1.20+ / 1.21+</span></li>
+          <li><strong>Focus</strong> <span>Performance & Reliability</span></li>
+        </ul>
+
+        <div style="display:block;height:8px;"></div>
+
+        <div class="hero-actions" style="margin-top:8px;">
+          <button class="primary" id="heroQuote">Request a Quote</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="container">
+        <h2>Potential Plugin Features</h2>
+
+        <div class="carousel-viewport" aria-label="Potential Plugin Features carousel">
+          <div class="carousel-track" id="featuresTrack" role="list">
+            <article class="card" role="listitem">
+              <h3>Custom Powers</h3>
+              <p>Design and implement unique abilities for players that enhance gameplay and engagement.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Interactive Items</h3>
+              <p>Create items with custom mechanics and effects to make the server experience memorable.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Player Progression Systems</h3>
+              <p>Build systems that track and reward player progression with ranks, skills, or milestones.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Event Hooks</h3>
+              <p>Integrate custom events that respond dynamically to player actions and server activity.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Custom Commands</h3>
+              <p>Add commands that enhance player control and server management efficiently.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Configuration &amp; Flexibility</h3>
+              <p>Provide easily adjustable plugin settings so server owners can tailor features to their needs.</p>
+            </article>
+
+            <article class="card" role="listitem">
+              <h3>Optimization &amp; Performance</h3>
+              <p>Ensure all plugins run smoothly, with minimal lag and resource usage for large servers.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reviews" id="reviews">
+      <div class="container">
+        <h2>Client Reviews</h2>
+
+        <div class="carousel-viewport" aria-label="User reviews carousel">
+          <div class="carousel-track" id="reviewsTrack" role="list">
+            <!-- review cards injected by script -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow">
+      <div class="container">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Scope review</strong><span>We clarify goals, constraints, and priorities.</span></li>
+          <li><strong>System design</strong><span>Architecture, data model, and API contracts.</span></li>
+          <li><strong>Development</strong><span>Incremental implementation with commits & reviews.</span></li>
+          <li><strong>Testing & delivery</strong><span>Automated and manual testing, plus clean handoff.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="projects">
+      <div class="container">
+        <h2>Selected examples</h2>
+        <div class="examples">
+          <figure class="example">
+            <figcaption>Persistence & scaling — Reliable storage and performance tuning</figcaption>
+          </figure>
+
+          <figure class="example">
+            <figcaption>Plugin toolchain — Tools, integrations, and deployment examples for Paper servers</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container">
+        <form id="contactForm" method="POST" action="https://formspree.io/f/xdaovabb" novalidate>
+          <h2 class="form-title">Request a quote</h2>
+          <div class="field-row">
+            <label for="name">Name *</label>
+            <input id="name" name="name" required />
+          </div>
+
+          <div class="field-row">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+
+          <div class="field-row">
+            <label for="size">Server size *</label>
+            <input id="size" name="server_size" placeholder="e.g., 100 concurrent" required />
+          </div>
+
+          <div class="field-row">
+            <label for="budget">Budget (USD) *</label>
+            <input id="budget" name="budget_range" type="number" min="0" step="1" placeholder="Enter budget in USD" required />
+          </div>
+
+          <div class="field-row">
+            <label for="document">Optional project document / link</label>
+            <input id="document" name="document_link" type="url" placeholder="https:// or Google Drive link (optional)" />
+          </div>
+
+          <div class="field-row">
+            <label for="features">Feature summary *</label>
+            <textarea id="features" name="feature_summary" rows="4" required placeholder="Describe the key features and goals"></textarea>
+          </div>
+
+          <div class="field-row" style="align-items:flex-start;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin:0;">
+              <input id="includeDeadline" type="checkbox" style="width:16px;height:16px;accent-color:var(--accent)" />
+              <span style="font-size:13px;color:var(--muted);margin-left:4px">Include a deadline?</span>
+            </label>
+          </div>
+
+          <div class="field-row" id="deadlineRow" style="display:none;">
+            <label for="deadline">Deadline</label>
+            <input id="deadline" name="deadline" type="date" />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary">Send Request</button>
+            <div id="formStatus" role="status" aria-live="polite"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> BrentLoaf. All rights reserved.</small>
+      <div class="footer-disclaimer">Note: This website was developed with the assistance of AI, because time and budget constraints this made traditional development impractical.</div>
+    </div>
+  </footer>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "app/": "/js/"
+    }
+  }
+  </script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
