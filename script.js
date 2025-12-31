@@ -731,3 +731,123 @@ form.addEventListener('submit', async (ev)=>{
     }
   });
 })();
+
+/* FAQ loader & expandable Q/A (loads faq.json and renders accessible expandable items) */
+(async function(){
+  const faqListEl = document.getElementById('faqList');
+  if(!faqListEl) return;
+
+  // Try to fetch faq.json from site root; if unavailable, show message
+  let faqs = [];
+  try {
+    const resp = await fetch('faq.json', {cache: 'no-cache'});
+    if(resp.ok){
+      const json = await resp.json();
+      if(Array.isArray(json)) faqs = json;
+    }
+  } catch (err) {
+    // ignore - will fallback to empty
+  }
+
+  faqListEl.innerHTML = ''; // clear loading note
+
+  if(!faqs.length){
+    const p = document.createElement('p');
+    p.className = 'muted-note';
+    p.style.color = 'var(--muted)';
+    p.textContent = 'No FAQ available.';
+    faqListEl.appendChild(p);
+    return;
+  }
+
+  faqs.forEach((item, idx) => {
+    const question = String(item.question || `Question ${idx+1}`);
+    const title = String(item.title || '');
+    const answer = String(item.answer || '');
+
+    const container = document.createElement('div');
+    container.className = 'faq-item';
+    container.setAttribute('role','region');
+    container.setAttribute('aria-expanded','false');
+
+    const qRow = document.createElement('div');
+    qRow.className = 'faq-question';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = `faq-btn-${idx}`;
+    btn.className = 'faq-toggle';
+    btn.setAttribute('aria-controls', `faq-panel-${idx}`);
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = question;
+
+    // caret indicator
+    const caret = document.createElement('span');
+    caret.setAttribute('aria-hidden','true');
+    caret.style.marginLeft = '12px';
+    caret.style.opacity = '0.7';
+    caret.textContent = '▸';
+
+    // wrap button and caret in a flex row
+    const leftWrap = document.createElement('div');
+    leftWrap.style.display = 'flex';
+    leftWrap.style.alignItems = 'center';
+    leftWrap.style.gap = '8px';
+    leftWrap.style.flex = '1';
+    leftWrap.appendChild(btn);
+    leftWrap.appendChild(caret);
+
+    qRow.appendChild(leftWrap);
+
+    // answer panel (show title once, bold & slightly larger)
+    const panel = document.createElement('div');
+    panel.className = 'faq-answer';
+    panel.id = `faq-panel-${idx}`;
+    panel.setAttribute('role','region');
+    panel.setAttribute('aria-labelledby', btn.id);
+    // Title displayed once here, styled bold and larger; answer follows
+    panel.innerHTML = `<div class="faq-title" style="font-weight:800;font-size:1.04rem;margin-bottom:6px">${title}</div><div>${answer}</div>`;
+    // ensure starting collapsed state via maxHeight (actual animation handled in setExpanded)
+    panel.style.maxHeight = '0px';
+
+    container.appendChild(qRow);
+    container.appendChild(panel);
+    faqListEl.appendChild(container);
+
+    // Toggle behavior (immediate show/hide — no interpolation)
+    function setExpanded(exp){
+      container.setAttribute('aria-expanded', String(exp));
+      btn.setAttribute('aria-expanded', String(exp));
+      caret.textContent = exp ? '▾' : '▸';
+
+      if(exp){
+        // expand: set explicit maxHeight to the content height so CSS transition animates.
+        const contentHeight = panel.scrollHeight;
+        panel.style.maxHeight = contentHeight + 'px';
+        // ensure focus for screen-reader users
+        panel.setAttribute('tabindex','-1');
+        panel.focus && panel.focus();
+      } else {
+        // collapse: animate maxHeight back to 0
+        panel.style.maxHeight = '0px';
+        panel.removeAttribute('tabindex');
+      }
+    }
+
+    // initialize closed state explicitly (ensures consistent snap behavior)
+    setExpanded(false);
+
+    btn.addEventListener('click', ()=> {
+      const isExp = btn.getAttribute('aria-expanded') === 'true';
+      setExpanded(!isExp);
+    });
+
+    // keyboard accessibility: Enter/Space toggles (button already handles, but ensure keydown for semantics)
+    btn.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  });
+})();

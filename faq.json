@@ -1,0 +1,18 @@
+[
+  {
+    "question": "How long does a plugin usually take?",
+    "title": "Typical Development Time",
+    "answer": "Plugins can take anywhere from days to months or longer. Small plugins with very few and simplified features may take very little time, while others with complex systems may take longer. Fortunately I have systems in place for this! For the usual features requested (e.g., items, powers, inventory displays, etc.), I have developed custom APIs to solve each of these problems, which cuts down on time spent re-implementing systems dramatically."
+  },
+  {
+    "question": "Do you offer support after delivery?",
+    "title": "Post-Delivery Support",
+    "answer": "Of course! Every plugin I develop can have future support depending on the situation—whether it's adding extra features down the line (additional charges may apply), clarifications about the scope, or even just a simple bug fix. For the last two, I will never charge."
+  },
+  {
+    "question": "Do you use AI in your work?",
+    "title": "AI in Plugin Workflow",
+    "answer": "Despite this site being made with the help of AI, I will never use direct copy-paste code from any generative AI in my commercial work. I treat AI as a tool, for example: asking it to clarify simple systems, find online documentation/references, or help point out a bug I may have missed. But there will never be a point where I use code directly from AI (I explicitly avoid that to prevent slowing down turnaround time) or ask it to design systems."
+  }
+]
+
